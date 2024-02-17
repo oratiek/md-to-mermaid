@@ -4,11 +4,9 @@ import sys
 TAB_SIZE = 4
 
 class Node:
-    def __init__(self, text, row_num):
+    def __init__(self, text):
         self.floor = self.get_floor(text)
         self.content = text[self.floor*TAB_SIZE:].strip("\n")
-        self.row_num = row_num
-        print(self.row_num, self.floor, self.content)
         self.parent = ""
         self.children = []
 
@@ -20,13 +18,25 @@ class Node:
                 break
             floor += 1
         return floor // TAB_SIZE
-            
+
 def parse(path):
     nodes = []
+    prev = None
+    mermaid = ""
     with open(path, "r") as f:
         for index, row in enumerate(f.readlines()):
-            nodes.append(Node(row, index))
-
+            if prev == None:
+                prev = Node(row)
+            else:
+                # 次のノードのfloorが自分より大きいなら自分のchildになる
+                node = Node(row)
+                if node.floor > prev.floor:
+                    mermaid += f"{prev.content} --> {node.content}\n"
+                    prev = node
+                else:
+                    prev = node
+    print(mermaid)
+    
 if __name__ == "__main__":
-    path = "test.md"
+    path = "test2.md"
     parse(path)
