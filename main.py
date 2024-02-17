@@ -11,7 +11,7 @@ class Node:
         self.children = []
     
     def clean_content(self, text, floor):
-        return text[floor*TAB_SIZE:].strip("\n").strip("-")
+        return text[floor*TAB_SIZE:].strip("\n").strip(" -")
 
     def get_floor(self, text):
         # タブの数をみる
@@ -28,19 +28,26 @@ def parse(path):
     mermaid = ""
     with open(path, "r") as f:
         for index, row in enumerate(f.readlines()):
+            node = Node(row)
+            nodes.append(node)
             if prev == None:
-                prev = Node(row)
+                prev = node
             else:
                 # 次のノードのfloorが自分より大きいなら自分のchildになる
-                node = Node(row)
                 if node.floor > prev.floor:
                     mermaid += f"{prev.content} --> {node.content}\n"
                     prev = node
                 else:
                     prev = node
     mermaid += prev.content
-
-    print(mermaid)
+    
+    final = ""
+    for node in nodes:
+        if node.floor == 0:
+            final += f"0 --> {node.content}\n"
+    
+    final += mermaid
+    print(final)
  
 if __name__ == "__main__":
     path = "test2.md"
