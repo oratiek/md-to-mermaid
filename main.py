@@ -30,25 +30,22 @@ def parse(path):
         for index, row in enumerate(f.readlines()):
             node = Node(row)
             nodes.append(node)
-            if prev == None:
-                prev = node
-            else:
-                # 次のノードのfloorが自分より大きいなら自分のchildになる
-                if node.floor > prev.floor:
-                    mermaid += f"{prev.content} --> {node.content}\n"
-                    prev = node
-                else:
-                    prev = node
-    mermaid += prev.content
     
-    final = ""
+    mermaid = ""
+    prev = nodes[0]
     for node in nodes:
         if node.floor == 0:
-            final += f"0 --> {node.content}\n"
-    
-    final += mermaid
-    print(final)
- 
+            mermaid += f"root --> {node.content}\n"
+        # parent --> child
+        if prev.floor < node.floor:
+            mermaid += f"{prev.content} --> {node.content}\n"
+        prev = node
+
+    print(mermaid)
+
+
+
+
 if __name__ == "__main__":
-    path = "test2.md"
+    path = "test/test.md"
     parse(path)
