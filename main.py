@@ -35,8 +35,10 @@ def parse(path):
                     prev = node
                 else:
                     prev = node
+    mermaid += prev.content
+
     print(mermaid)
-    
+ 
 if __name__ == "__main__":
     path = "test2.md"
     parse(path)
