@@ -4,10 +4,11 @@ import sys
 TAB_SIZE = 4
 
 class Node:
-    def __init__(self, text):
+    def __init__(self, text, index):
         self.floor = self.get_floor(text)
         self.content = self.clean_content(text, self.floor)
         self.parent = ""
+        self.index = index
         self.children = []
     
     def clean_content(self, text, floor):
@@ -28,17 +29,17 @@ def parse(path):
     mermaid = ""
     with open(path, "r") as f:
         for index, row in enumerate(f.readlines()):
-            node = Node(row)
+            node = Node(row, index)
             nodes.append(node)
     
     mermaid = ""
     prev = nodes[0]
     for node in nodes:
         if node.floor == 0:
-            mermaid += f"root --> {node.content}\n"
+            mermaid += f"root --> {node.index}[{node.content}]\n"
         # parent --> child
         if prev.floor < node.floor:
-            mermaid += f"{prev.content} --> {node.content}\n"
+            mermaid += f"{prev.index}[{prev.content}] --> {node.index}[{node.content}]\n"
         prev = node
 
     print(mermaid)
@@ -47,5 +48,5 @@ def parse(path):
 
 
 if __name__ == "__main__":
-    path = "test/test.md"
+    path = "test/test4.md"
     parse(path)
