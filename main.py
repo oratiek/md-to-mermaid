@@ -6,9 +6,12 @@ TAB_SIZE = 4
 class Node:
     def __init__(self, text):
         self.floor = self.get_floor(text)
-        self.content = text[self.floor*TAB_SIZE:].strip("\n")
+        self.content = self.clean_content(text, self.floor)
         self.parent = ""
         self.children = []
+    
+    def clean_content(self, text, floor):
+        return text[floor*TAB_SIZE:].strip("\n").strip("-")
 
     def get_floor(self, text):
         # タブの数をみる
